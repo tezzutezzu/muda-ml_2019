@@ -4,45 +4,33 @@ let poses = [];
 
 function setup() {
   createCanvas(640, 360);
+  img = loadImage("images/dancers.jpg", onImageReady);
+}
 
-  // select the image p5 dom library
-  // call modelReady() when it is loaded
-  img = select("img");
+function onImageReady() {
+  poseNet = ml5.poseNet(onModelReady);
+}
 
-  // set the image size to the size of the canvas
-  img.size(width, height);
-  img.hide();
+// when poseNet is ready, do the detection
+function onModelReady() {
+  console.log(img);
 
-  let options = {
-    imageScaleFactor: 1,
-    minConfidence: 0.1
-  };
-
-  // assign poseNet
-  poseNet = ml5.poseNet(modelReady, options);
   // This sets up an event that listens to 'pose' events
   poseNet.on("pose", function(results) {
     console.log(results);
     poses = results;
     poseDetected();
   });
-}
-
-// when poseNet is ready, do the detection
-function modelReady() {
-  select("#status").html("Model Loaded");
-
-  // When the model is ready, run the singlePose() function...
-  // If/When a pose is detected, poseNet.on('pose', ...) will be listening for the detection results
-  // in the draw() loop, if there are any poses, then carry out the draw commands
   poseNet.singlePose(img);
 }
 
 function poseDetected() {
   if (poses.length > 0) {
+    console.log(poses);
+
     image(img, 0, 0, width, height);
-    drawSkeleton(poses);
-    //  drawKeypoints(poses);
+    // drawSkeleton();
+     drawKeypoints();
   }
 }
 
@@ -78,12 +66,14 @@ function drawKeypoints() {
 function drawSkeleton() {
   // Loop through all the skeletons detected
   for (let i = 0; i < poses.length; i++) {
+    
     let skeleton = poses[i].skeleton;
+    console.log(poses[i]);
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j++) {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
-      stroke(255);
+      // stroke(255);
       strokeWeight(1);
       line(
         partA.position.x,
