@@ -1,5 +1,7 @@
 /*
-- variables and draw loop
+- draw loop
+- P5 built-in variable
+- global variables
 - background function 
 */
 

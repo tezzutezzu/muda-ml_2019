@@ -5,9 +5,10 @@
 - Console.log
 - Don't worry about the syntax for now! Ask for help if you get stuck :)
 - createCanvas
-- square draw functions
-- variables
-- circle draw functions
+- P5 built-in functions
+- draw square function
+- variables and scope
+- draw circle function
 - Fills, strokes 
 */
 

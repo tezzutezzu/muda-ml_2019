@@ -1,24 +1,18 @@
 /*
-- global variables
 - logic
 */
-
-var counter = 0;
-
 function setup() {
   createCanvas(400, 400);
-  colorMode(HSB);
-  noStroke();
 }
 
 function draw() {
-  background(255);
-  counter += 1;
-  if (counter > 255) counter = 0;
-  fill(counter, 50, 50);
-  if (mouseIsPressed) {
-    circle(mouseX, mouseY, 30);
+  if (mouseX < 100) {
+    fill("red");
+  } else if (mouseX > 100 && mouseX < 200) {
+    fill("yellow");
   } else {
-    circle(mouseX, mouseY, 50);
+    fill("green");
   }
+
+  circle(mouseX, mouseY, 50);
 }
