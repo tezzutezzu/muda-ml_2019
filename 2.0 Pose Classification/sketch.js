@@ -4,20 +4,24 @@ let poses = [];
 
 function setup() {
   createCanvas(640, 360);
-  img = loadImage("images/dancers.jpg", onImageReady);
+  fill("white");
+  stroke("white");
+  strokeWeight(4);
+
+  img = loadImage("images/runner.jpg", onImageReady);
 }
 
 function onImageReady() {
-  poseNet = ml5.poseNet(onModelReady);
+  let options = {
+    imageScaleFactor: 1,
+    minConfidence: 0.1
+  };
+
+  poseNet = ml5.poseNet(onModelReady, options);
 }
 
-// when poseNet is ready, do the detection
 function onModelReady() {
-  console.log(img);
-
-  // This sets up an event that listens to 'pose' events
   poseNet.on("pose", function(results) {
-    console.log(results);
     poses = results;
     poseDetected();
   });
@@ -26,11 +30,9 @@ function onModelReady() {
 
 function poseDetected() {
   if (poses.length > 0) {
-    console.log(poses);
-
     image(img, 0, 0, width, height);
-    // drawSkeleton();
-     drawKeypoints();
+    drawSkeleton();
+    drawKeypoints();
   }
 }
 
@@ -38,37 +40,25 @@ function poseDetected() {
 
 function draw() {}
 
-// The following comes from https://ml5js.org/docs/posenet-webcam
-// A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
-  // Loop through all the poses detected
-  for (let i = 0; i < poses.length; i++) {
-    // For each pose detected, loop through all the keypoints
-    let pose = poses[i].pose;
-    console.log(poses);
-    if (pose.keypoints) {
-      for (let j = 0; j < pose.keypoints.length; j++) {
-        // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-        let keypoint = pose.keypoints[j];
-        // Only draw an ellipse is the pose probability is bigger than 0.2
+  poses.forEach(p => {
+    console.log(p);
+
+    if (p.pose.keypoints) {
+      p.pose.keypoints.forEach(keypoint => {
         if (keypoint.score > 0.2) {
-          fill(255);
-          stroke(20);
-          strokeWeight(4);
-          ellipse(round(keypoint.position.x), round(keypoint.position.y), 8, 8);
+          circle(round(keypoint.position.x), round(keypoint.position.y), 4);
         }
-      }
+      });
     }
-  }
+  });
 }
 
 // A function to draw the skeletons
 function drawSkeleton() {
   // Loop through all the skeletons detected
-  for (let i = 0; i < poses.length; i++) {
-    
-    let skeleton = poses[i].skeleton;
-    console.log(poses[i]);
+  poses.forEach(p => {
+    let skeleton = p.skeleton;
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j++) {
       let partA = skeleton[j][0];
@@ -82,5 +72,5 @@ function drawSkeleton() {
         partB.position.y
       );
     }
-  }
+  });
 }

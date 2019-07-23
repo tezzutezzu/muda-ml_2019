@@ -1,6 +1,8 @@
 /* 
+- Show ML5 site
 - Show how we changed index.html
-- Load the model
+- Load the model and use a callback
+- ML5 error first callbacks
 - Callbacks and flags
 */
 

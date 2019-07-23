@@ -1,5 +1,5 @@
 /* 
-
+- Introduce p5 dom
 */
 
 let classifier;
@@ -8,8 +8,8 @@ let roundedConfidence;
 let video;
 
 function setup() {
-  createCanvas(400, 40);
   video = createCapture(VIDEO);
+  createCanvas(400, 40);
   classifier = ml5.imageClassifier("MobileNet", video, onModelReady);
 }
 

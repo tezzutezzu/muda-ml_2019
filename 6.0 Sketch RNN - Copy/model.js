@@ -4,13 +4,13 @@ window.animals = [
   "bee",
   "bird",
   "butterfly",
-  "cat",
-  "crab",
-  "dog",
-  "dolphin",
-  "duck",
-  "alarm_clock", 
-  "elephant"
+  // "cat",
+  // "crab",
+  // "dog",
+  // "dolphin",
+  // "duck",
+  // "alarm_clock", 
+  // "elephant"
 ];
 
 // models = [

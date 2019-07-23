@@ -5,6 +5,7 @@
 let imageLoaded = false;
 let img;
 
+
 function setup() {
   createCanvas(400, 400);
   img = loadImage("images/bird.jpg", onImageReady);
