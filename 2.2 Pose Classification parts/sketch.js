@@ -1,12 +1,8 @@
-// Copyright (c) 2018 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+/* 
+- every parts has a name
+- we need dom to captture video
 
-/* ===
-ml5 Example
-PoseNet example using p5.js
-=== */
+*/
 
 let video;
 let poseNet;
@@ -17,11 +13,8 @@ function setup() {
   video = createCapture(VIDEO);
   video.size(width, height);
 
-  // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady);
-  // This sets up an event that fills the global variable "poses"
-  // with an array every time new poses are detected
-  poseNet.on('pose', function(results) {
+  poseNet.on("pose", function(results) {
     poses = results;
   });
   // Hide the video element, and just show the canvas
@@ -29,11 +22,7 @@ function setup() {
 }
 
 function modelReady() {
-  select('#status').html('Model Loaded');
-}
-
-function mousePressed(){
-  console.log(JSON.stringify(poses))
+  select("#status").html("Model Loaded");
 }
 
 function draw() {
@@ -46,17 +35,17 @@ function draw() {
 
     // Create a pink ellipse for the nose
     fill("red");
-    let nose = pose['nose'];
+    let nose = pose["nose"];
     ellipse(nose.x, nose.y, 50, 50);
 
-//     // Create a yellow ellipse for the right eye
-//     fill(255, 215, 0);
-//     let rightEye = pose['rightEye'];
-//     ellipse(rightEye.x, rightEye.y, 20, 20);
+    //     // Create a yellow ellipse for the right eye
+    //     fill(255, 215, 0);
+    //     let rightEye = pose['rightEye'];
+    //     ellipse(rightEye.x, rightEye.y, 20, 20);
 
-//     // Create a yellow ellipse for the right eye
-//     fill(255, 215, 0);
-//     let leftEye = pose['leftEye'];
-//     ellipse(leftEye.x, leftEye.y, 20, 20);
+    //     // Create a yellow ellipse for the right eye
+    //     fill(255, 215, 0);
+    //     let leftEye = pose['leftEye'];
+    //     ellipse(leftEye.x, leftEye.y, 20, 20);
   }
 }

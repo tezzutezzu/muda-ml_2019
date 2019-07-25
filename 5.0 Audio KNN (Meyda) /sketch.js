@@ -1,4 +1,10 @@
+/*
+- KNN algorithm 
+- https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm
+- https://meyda.js.org/
+*/
 const knnClassifier = ml5.KNNClassifier();
+
 let analyzer;
 let features;
 let isPredicting;
@@ -10,30 +16,27 @@ let buttonClearAll;
 
 function setup() {
   createCanvas(400, 400);
-  
-   // get mic input 
+
+  // get mic input
   navigator.mediaDevices
     .getUserMedia({
       audio: true,
       video: false
     })
     .then(startAnalyzer);
-  
 }
 
-
 function startAnalyzer(stream) {
-  
-  
   createButtons();
   updateCounts();
-  
+
   var context = new AudioContext();
   var source = context.createMediaStreamSource(stream);
   analyzer = Meyda.createMeydaAnalyzer({
     audioContext: context,
     source: source,
     // the audio features we want to extract, see here: https://meyda.js.org/audio-features
+    // Mel-Frequency Cepstral Coefficients
     featureExtractors: ["powerSpectrum", "mfcc"],
     callback: f => {
       features = f;
@@ -51,7 +54,6 @@ function draw() {
   }
 }
 
-
 // Add an example with a label to the classifier
 function addExample(label) {
   knnClassifier.addExample(features.mfcc, label);
@@ -63,8 +65,6 @@ function classify() {
   knnClassifier.classify(features.mfcc, gotResults);
 }
 
-
-
 // A util function to create UI buttons
 function createButtons() {
   new StickyButton("#buttonA", "A");
@@ -74,7 +74,7 @@ function createButtons() {
   buttonPredict = select("#buttonPredict");
   buttonPredict.mousePressed(() => {
     if (isPredicting) {
-       buttonPredict.html("start predicting");
+      buttonPredict.html("start predicting");
     } else {
       buttonPredict.html("stop predicting");
       classify();
@@ -85,7 +85,6 @@ function createButtons() {
   // Clear all classes button
   buttonClearAll = select("#clearAll");
   buttonClearAll.mousePressed(clearAllLabels);
-
 }
 
 // Show the results
@@ -102,16 +101,17 @@ function gotResults(err, result) {
 function updateCounts() {
   const counts = knnClassifier.getCountByLabel();
   const numLabels = knnClassifier.getNumLabels();
+  console.log(counts);
 
   select("#samplesA").html(`${counts.A || 0} samples`);
   select("#samplesB").html(`${counts.B || 0} samples`);
-  
+
   if (numLabels > 0) {
-    buttonPredict.style("visibility","visible");
-    buttonClearAll.style("visibility","visible");
+    buttonPredict.style("visibility", "visible");
+    buttonClearAll.style("visibility", "visible");
   } else {
-    buttonPredict.style("visibility","hidden");
-    buttonClearAll.style("visibility","hidden");
+    buttonPredict.style("visibility", "hidden");
+    buttonClearAll.style("visibility", "hidden");
   }
 }
 
@@ -127,22 +127,23 @@ function clearAllLabels() {
   updateCounts();
 }
 
-
-
 function drawResults() {
   if (results && results.confidencesByLabel) {
     fill(255);
-    console.log(results);
     const label = results.label;
     // result.label is the label that has the highest confidence
     if (label) {
-      text(
-        `Confident I'm hearing ${label} at ${round(
-          results.confidencesByLabel[label] * 100
-        )}%`,
-        10,
-        120
-      );
+      if (results.confidencesByLabel[label] > 0.6) {
+        text(
+          `Confident I'm hearing ${label} at ${round(
+            results.confidencesByLabel[label] * 100
+          )}%`,
+          10,
+          120
+        );
+      } else {
+        text("Listening...", 10, 120);
+      }
     }
   }
 }

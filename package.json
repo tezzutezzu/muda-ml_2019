@@ -1,0 +1,22 @@
+{
+  "name": "muda-ml_2019",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ml5.danilo.min.js",
+  "scripts": {
+    "start": "live-reload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tezzutezzu/muda-ml_2019.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tezzutezzu/muda-ml_2019/issues"
+  },
+  "homepage": "https://github.com/tezzutezzu/muda-ml_2019#readme",
+  "devDependencies": {
+    "live-reload": "^1.1.0"
+  }
+}

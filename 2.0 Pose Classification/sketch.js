@@ -4,9 +4,6 @@ let poses = [];
 
 function setup() {
   createCanvas(640, 360);
-  fill("white");
-  stroke("white");
-  strokeWeight(4);
 
   img = loadImage("images/runner.jpg", onImageReady);
 }
@@ -23,27 +20,31 @@ function onImageReady() {
 function onModelReady() {
   poseNet.on("pose", function(results) {
     poses = results;
-    poseDetected();
   });
   poseNet.singlePose(img);
 }
 
-function poseDetected() {
-  if (poses.length > 0) {
+function draw() {
+  background(255);
+  if (img) {
     image(img, 0, 0, width, height);
-    drawSkeleton();
-    drawKeypoints();
+    if (poses.length > 0) {
+      drawSkeleton();
+      fill("white");
+      stroke("white");
+      strokeWeight(4);
+      drawKeypoints();
+    } else {
+      fill(255);
+      noStroke();
+      textAlign(CENTER);
+      text("calculating pose...", width / 2, height - 20);
+    }
   }
 }
 
-// draw() will not show anything until poses are found
-
-function draw() {}
-
 function drawKeypoints() {
   poses.forEach(p => {
-    console.log(p);
-
     if (p.pose.keypoints) {
       p.pose.keypoints.forEach(keypoint => {
         if (keypoint.score > 0.2) {

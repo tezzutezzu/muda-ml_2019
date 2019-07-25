@@ -17,7 +17,7 @@ function setup() {
 }
 
 function onModelReady() {
-  img = loadImage("images/bird.jpg", onImageReady);
+  img = loadImage("images/bird2.jpg", onImageReady);
 }
 
 function onImageReady() {

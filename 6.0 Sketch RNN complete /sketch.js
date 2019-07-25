@@ -1,3 +1,6 @@
+//https://magenta.tensorflow.org/assets/sketch_rnn_demo/index.html
+//https://magenta.tensorflow.org/assets/sketch_rnn_demo/multi_predict.html
+
 const sketchiz = [];
 let models = [];
 let seedStrokes = [];
