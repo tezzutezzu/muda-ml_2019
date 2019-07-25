@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/tezzutezzu/muda-ml_2019/issues"
   },
-  "homepage": "https://github.com/tezzutezzu/muda-ml_2019#readme",
-  "devDependencies": {
-    "live-reload": "^1.1.0"
-  }
+  "homepage": "https://github.com/tezzutezzu/muda-ml_2019#readme"
 }
