@@ -1,6 +1,5 @@
 /*
-- KNN algorithm 
-- https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm
+- KNN algorithm: https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm
 - https://meyda.js.org/
 */
 const knnClassifier = ml5.KNNClassifier();
@@ -37,7 +36,7 @@ function startAnalyzer(stream) {
     source: source,
     // the audio features we want to extract, see here: https://meyda.js.org/audio-features
     // Mel-Frequency Cepstral Coefficients
-    featureExtractors: ["powerSpectrum", "mfcc"],
+    featureExtractors: ["mfcc"],
     callback: f => {
       features = f;
     }
@@ -61,14 +60,16 @@ function addExample(label) {
 }
 
 function classify() {
+  // console.log(features.mfcc);
+
   // Use knnClassifier to classify which label do these features belong to
   knnClassifier.classify(features.mfcc, gotResults);
 }
 
 // A util function to create UI buttons
 function createButtons() {
-  new StickyButton("#buttonA", "A");
-  new StickyButton("#buttonB", "B");
+  new StickyButton("#buttonA", "train background noise");
+  new StickyButton("#buttonB", "train a sound");
 
   // Predict button
   buttonPredict = select("#buttonPredict");
@@ -89,19 +90,21 @@ function createButtons() {
 
 // Show the results
 function gotResults(err, result) {
-  // Display any error
-  if (err) {
-    console.error(err);
+  // console.log(result);
+
+  try {
+    // Display any error
+    results = result;
+    if (isPredicting) classify();
+  } catch (err) {
+    console.log(err);
   }
-  results = result;
-  if (isPredicting) classify();
 }
 
 // Update the example count for each label
 function updateCounts() {
   const counts = knnClassifier.getCountByLabel();
   const numLabels = knnClassifier.getNumLabels();
-  console.log(counts);
 
   select("#samplesA").html(`${counts.A || 0} samples`);
   select("#samplesB").html(`${counts.B || 0} samples`);
@@ -133,7 +136,7 @@ function drawResults() {
     const label = results.label;
     // result.label is the label that has the highest confidence
     if (label) {
-      if (results.confidencesByLabel[label] > 0.6) {
+      if (results.confidencesByLabel[label] > 0.7) {
         text(
           `Confident I'm hearing ${label} at ${round(
             results.confidencesByLabel[label] * 100
@@ -141,8 +144,6 @@ function drawResults() {
           10,
           120
         );
-      } else {
-        text("Listening...", 10, 120);
       }
     }
   }
@@ -159,7 +160,7 @@ function drawMFCCSquares() {
 function StickyButton(selector, label) {
   let timer;
   let button = select(selector);
-
+  button.html(label);
   button.mousePressed(() => {
     window.addEventListener("mouseup", onMouseup);
     timer = setInterval(() => {
