@@ -16,12 +16,12 @@ function setup() {
   createCanvas(640, 480);
   video = createCapture(VIDEO);
   video.size(width, height);
-  colorMode(HSB);
+
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady);
   // This sets up an event that fills the global variable "poses"
   // with an array every time new poses are detected
-  poseNet.on("pose", function(results) {
+  poseNet.on('pose', function(results) {
     poses = results;
   });
   // Hide the video element, and just show the canvas
@@ -29,36 +29,31 @@ function setup() {
 }
 
 function modelReady() {
-  select("#status").html("Model Loaded");
+  select('#status').html('Model Loaded');
 }
 
 function draw() {
-  fill(100, 0, 100, 10, 0.5);
-  rect(0, 0, width, height);
-  if (!(frameCount % 150)) background(255);
-  // image(video, 0, 0, width, height);
-  //
+  image(video, 0, 0, width, height);
+
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
-  // drawSkeleton();
+  drawSkeleton();
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints() {
+function drawKeypoints()  {
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i++) {
-    if (i == 0) {
-      // For each pose detected, loop through all the keypoints
-      let pose = poses[i].pose;
-      for (let j = 0; j < pose.keypoints.length; j++) {
-        // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-        let keypoint = pose.keypoints[j];
-        // Only draw an ellipse is the pose probability is bigger than 0.2
-        if (keypoint.score > 0.2) {
-          fill(j * 100, 100, 100);
-          noStroke();
-          ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-        }
+    // For each pose detected, loop through all the keypoints
+    let pose = poses[i].pose;
+    for (let j = 0; j < pose.keypoints.length; j++) {
+      // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+      let keypoint = pose.keypoints[j];
+      // Only draw an ellipse is the pose probability is bigger than 0.2
+      if (keypoint.score > 0.2) {
+        fill(255, 0, 0);
+        noStroke();
+        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
       }
     }
   }
@@ -74,12 +69,7 @@ function drawSkeleton() {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
       stroke(255, 0, 0);
-      line(
-        partA.position.x,
-        partA.position.y,
-        partB.position.x,
-        partB.position.y
-      );
+      line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }
 }
