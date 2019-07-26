@@ -1,12 +1,4 @@
-// Copyright (c) 2018 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
 
-/* ===
-ml5 Example
-PoseNet example using p5.js
-=== */
 
 let video;
 let poseNet;
@@ -27,61 +19,53 @@ let imageCanvas;
 let savedImages = [];
 
 let m2i;
+let tracker;
+
 
 function setup() {
-  
   createCanvas(canvasWitdth, canvasHeight);
   monitorGraphics = createGraphics(imageWidth, imageHeight);
   imageCanvas = createGraphics(imageWidth, imageHeight);
-  
-  video = createCapture(VIDEO);
-  video.size(monitorGraphics.width, monitorGraphics.height);
 
-  // Create a new poseNet method with a single detection
-  poseNet = ml5.poseNet(video, modelReady);
-  // This sets up an event that fills the global variable "poses"
-  // with an array every time new poses are detected
-  poseNet.on('pose', function(results) {
-    poses = results;
+  tracker =  new SkeletonTracker({
+    onModelLoaded: modelReady
   });
-  // Hide the video element, and just show the canvas
-  video.hide();
 
   m2i = new M2I(imageCanvas);
-
 }
 
 function modelReady() {
-  select('#status').html('Model Loaded');
+  select("#status").html("Model Loaded");
 }
 
 function draw() {
-
-  monitorGraphics.image(video,0,0);
+  monitorGraphics.image(video, 0, 0);
 
   m2i.draw(poses);
+
+  
   drawKeypoints();
   drawSkeleton();
-  image(monitorGraphics, canvasWitdth/2, 0);
+  image(monitorGraphics, canvasWitdth / 2, 0);
   image(imageCanvas, 0, 0);
 }
 
 function keyPressed() {
   console.log(keyCode);
-  if (keyCode === 32) { 
-    // space 
+  if (keyCode === 32) {
+    // space
     keepImage();
   } else if (keyCode === 83) {
     // s
     saveAllImages();
   } else if (keyCode === 67) {
-  // c
-  m2i.clearCanvas();
-}
+    // c
+    m2i.clearCanvas();
+  }
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints()  {
+function drawKeypoints() {
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i++) {
     // For each pose detected, loop through all the keypoints
@@ -107,43 +91,55 @@ function drawSkeleton() {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
       monitorGraphics.stroke(255, 0, 0);
-      monitorGraphics.line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
+      monitorGraphics.line(
+        partA.position.x,
+        partA.position.y,
+        partB.position.x,
+        partB.position.y
+      );
     }
   }
 }
 
 function defaultDrawToMonitor(keypoint) {
-  let c = color(255,0,0);
+  let c = color(255, 0, 0);
 
   monitorGraphics.fill(c);
   monitorGraphics.noStroke();
   monitorGraphics.ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
 }
 
-
 function keepImage() {
   let img = createImage(imageWidth, imageHeight);
 
-  img.copy(m2i.canvas, 0, 0, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight);
+  img.copy(
+    m2i.canvas,
+    0,
+    0,
+    imageWidth,
+    imageHeight,
+    0,
+    0,
+    imageWidth,
+    imageHeight
+  );
 
   savedImages.push(img);
-  if(savedImages.length > 20) {
+  if (savedImages.length > 20) {
     savedImages.shift();
   }
   m2i.clearCanvas();
 }
 
 function saveAllImages() {
-
   let cnt = 1;
-  savedImages.forEach( img => {
+  savedImages.forEach(img => {
     let keyword = $("#keyword").val();
-    img.save('img_' + keyword + formatNumber(cnt++  ), 'png');
-  })
-
+    img.save("img_" + keyword + formatNumber(cnt++), "png");
+  });
 }
 
 function formatNumber(i) {
-  let num = ("0000" + i);
-  return num.substr(num.length-4, 4);
+  let num = "0000" + i;
+  return num.substr(num.length - 4, 4);
 }
