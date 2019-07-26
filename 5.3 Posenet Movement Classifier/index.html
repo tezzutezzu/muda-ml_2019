@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>PoseNet example using p5.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="   crossorigin="anonymous"></script>  
+    <script src="./js/M2I.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <h1>BooMle it</h1>
+    <h2>make a movement to search on google</h2>
+    <p id="status">Loading model...</p>
+    <input id="keyword" value="" placeholder="type keyword here">
+    running: <input id="running" type="checkbox" > key "c" clear image, "s" save all images, "space bar" keep current image 
+    <script src="js/sketch.js"></script>
+  </body>
+</html>
