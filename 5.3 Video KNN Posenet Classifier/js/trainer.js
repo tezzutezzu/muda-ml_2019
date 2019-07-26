@@ -51,23 +51,19 @@ function draw() {
     return;
   }
 
+  const poses = classifier.poses;
+
+  image(drawer.canvas, 0, 0);
   if (keyIsPressed) {
     //training
-    if (trainingSamples.length < 100) {
-      trainingSamples.push({ x: mouseX, y: mouseY });
-      drawTrail(trainingSamples);
-    } else {
-      drawTrail(trainingSamples);
-      trainingSamples = [];
+    if (poses && poses.length > 0) {
+      drawer.update(poses);
+      classifier.addSample(drawer.getImageData().imageData, key);
     }
   } else {
-    const poses = classifier.poses;
     if (poses && poses.length > 0) {
       drawer.update(poses);
     }
-    image(drawer.canvas, 0, 0);
-    // currentSamples.push({ x: mouseX, y: mouseY });
-    // drawTrail(currentSamples);
   }
 }
 

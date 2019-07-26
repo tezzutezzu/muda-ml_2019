@@ -39,9 +39,9 @@ class MovementClassifier {
     this.loaded = true;
   };
 
-  addSample = imageData => {
-    const features = featureExtractor.infer(imageData);
-    knnClassifier.addExample(features, label);
+  addSample = (imageData, label) => {
+    const features = this.featureExtractor.infer(imageData);
+    this.knnClassifier.addExample(features, label);
   };
 
   classify = () => {
