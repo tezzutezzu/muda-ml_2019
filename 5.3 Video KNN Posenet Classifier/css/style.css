@@ -1,8 +1,48 @@
 html, body {
+    font-family: 'Roboto Mono', monospace;
     margin: 0;
     padding: 0;
   }
+  body {
+    background-color: aqua;
+    margin: 46px 0 0 70px;
+  }
+
   canvas {
     display: block;
   }
+
+  #status {
+    position: absolute;
+    top:0;
+    left: 0;
+    font-size: 9px;
+  }
   
+  #searchResultsContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 100;
+    background-color: blanchedalmond;
+    padding: 20px;
+  }
+  
+  #searchResultsContainer h2 {
+    margin-top: 85px;
+  }
+
+  #searchResults {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #searchResults li {
+    display: inline;
+  }
+  #searchResults li img {
+      width: 200px;
+  }
