@@ -19,41 +19,21 @@ let bodyParts;
 let canvasWitdth = 1280;
 let canvasHeight = 480;
 let imageWidth = 640;
-let imageHeigt = 480;
+let imageHeight = 480;
 
 let monitorGraphics;
-let masterGraphics;
+let imageCanvas;
 
 let savedImages = [];
 
+let m2i;
+
 function setup() {
   
-  bodyParts = {
-
-    nose: { color: color(230,230,230), func: nose},
-    leftEye: { color: color(230,230,230), func: leftEye},
-    rightEye: { color: color(230,230,230), func: rightEye},
-    leftEar: { color: color(230,230,230), func: leftEar},
-    rightEar: { color: color(230,230,230), func: rightEar},
-    leftShoulder: { color: color(0,0,255), func: leftShoulder},
-    rightShoulder: { color: color(240,250,0), func: rightShoulder},
-    leftElbow: { color: color(0,160,255), func: leftElbow},
-    rightElbow: { color: color(250,180,0), func: rightElbow},
-    leftWrist: { color: color(0,255,255), func: leftWrist},
-    rightWrist: { color: color(255,0,0), func: rightWrist},
-    leftHip: { color: color(250,180,10), func: leftHip},
-    rightHip: { color: color(0,240,100), func: rightHip},
-    leftKnee: { color: color(240,90,0), func: leftKnee},
-    rightKnee: { color: color(40,240,0), func: rightKnee},
-    leftAnkle: { color: color(240,0,0), func: leftAnkle},
-    rightAnkle: { color: color(180,240,10), func: rightAnkle},
-  }
-  
   createCanvas(canvasWitdth, canvasHeight);
-  monitorGraphics = createGraphics(imageWidth, imageHeigt);
-  masterGraphics = createGraphics(imageWidth, imageHeigt);
-  clearMasterGraphics();
-
+  monitorGraphics = createGraphics(imageWidth, imageHeight);
+  imageCanvas = createGraphics(imageWidth, imageHeight);
+  
   video = createCapture(VIDEO);
   video.size(monitorGraphics.width, monitorGraphics.height);
 
@@ -62,14 +42,13 @@ function setup() {
   // This sets up an event that fills the global variable "poses"
   // with an array every time new poses are detected
   poseNet.on('pose', function(results) {
-    if( printPose ) {
-      console.log(results, bodyParts);
-      printPose = false;
-    }
     poses = results;
   });
   // Hide the video element, and just show the canvas
   video.hide();
+
+  m2i = new M2I(imageCanvas);
+
 }
 
 function modelReady() {
@@ -78,19 +57,13 @@ function modelReady() {
 
 function draw() {
 
-  running = $("#running").is(":checked");
-
-  // We can call both functions to draw all keypoints and the skeletons
-  if( frameCount % 240 === 0) {
-    //keepImage();
-  }
-
   monitorGraphics.image(video,0,0);
 
+  m2i.draw(poses);
   drawKeypoints();
   drawSkeleton();
   image(monitorGraphics, canvasWitdth/2, 0);
-  image(masterGraphics, 0, 0);
+  image(imageCanvas, 0, 0);
 }
 
 function keyPressed() {
@@ -103,7 +76,7 @@ function keyPressed() {
     saveAllImages();
   } else if (keyCode === 67) {
   // c
-  clearMasterGraphics();
+  m2i.clearCanvas();
 }
 }
 
@@ -119,9 +92,6 @@ function drawKeypoints()  {
       // Only draw an ellipse is the pose probability is bigger than 0.2
       if (keypoint.score > 0.25) {
         defaultDrawToMonitor(keypoint);
-        if( running) {
-          bodyParts[keypoint.part].func(keypoint);
-        }
       }
     }
   }
@@ -151,82 +121,16 @@ function defaultDrawToMonitor(keypoint) {
 }
 
 
-function defaultDraw(keypoint) {
-  let c = bodyParts[keypoint.part].color;
-
-  masterGraphics.fill(c);
-  masterGraphics.noStroke();
-  masterGraphics.ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-}
-
-function nose(keypoint){
-  defaultDraw(keypoint);
-}
-function leftEye(keypoint){
-  defaultDraw(keypoint);
-}
-function rightEye(keypoint){
-  defaultDraw(keypoint);
-}
-function leftEar(keypoint){
-  defaultDraw(keypoint);
-}
-function rightEar(keypoint){
-  defaultDraw(keypoint);
-}
-function leftShoulder(keypoint){
-  defaultDraw(keypoint);
-}
-function rightShoulder(keypoint){
-  defaultDraw(keypoint);
-}
-function leftElbow(keypoint){
-  defaultDraw(keypoint);
-}
-function rightElbow(keypoint){
-  defaultDraw(keypoint);
-}
-function leftWrist(keypoint){
-  defaultDraw(keypoint);
-}
-function rightWrist(keypoint){
-  defaultDraw(keypoint);
-}
-function leftHip(keypoint){
-  defaultDraw(keypoint);
-}
-function rightHip(keypoint){
-  defaultDraw(keypoint);
-}
-function leftKnee(keypoint){
-  defaultDraw(keypoint);
-}
-function rightKnee(keypoint){
-  defaultDraw(keypoint);
-}
-function leftAnkle(keypoint){
-  defaultDraw(keypoint);
-}
-function rightAnkle(keypoint){
-  defaultDraw(keypoint);
-}
-
-
 function keepImage() {
-  let img = createImage(imageWidth, imageHeigt);
+  let img = createImage(imageWidth, imageHeight);
 
-  img.copy(masterGraphics, 0, 0, imageWidth, imageHeigt, 0, 0, imageWidth, imageHeigt);
+  img.copy(m2i.canvas, 0, 0, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight);
 
   savedImages.push(img);
   if(savedImages.length > 20) {
     savedImages.shift();
   }
-  clearMasterGraphics();
-}
-
-function clearMasterGraphics() {
-  masterGraphics.background(255);
-
+  m2i.clearCanvas();
 }
 
 function saveAllImages() {
