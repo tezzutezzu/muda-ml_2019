@@ -35,17 +35,22 @@ class MovementClassifier {
   addSample = (imageData, label) => {
     console.log("adding", label);
     const features = this.featureExtractor.infer(imageData);
+    console.log(features);
+    
     this.knnClassifier.addExample(features, label);
   };
 
-  classify = onResult => {
+  classify = (imageData, onResult) => {
     // Get the total number of labels from knnClassifier
-    const numLabels = knnClassifier.getNumLabels();
+    const numLabels = this.knnClassifier.getNumLabels();
     if (numLabels <= 0) {
       console.error("There is no examples in any label");
       return;
     }
-    const features = this.featureExtractor.infer(getFrameImage().imageData);
+
+    console.log(numLabels);
+    
+    const features = this.featureExtractor.infer(imageData);
     // Use knnClassifier to classify which label do these features belong to
     this.knnClassifier.classify(features, onResult);
   };

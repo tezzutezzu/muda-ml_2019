@@ -2,8 +2,8 @@
   Movements trainer
 */
 
-const imageWidth = window.innerWidth - 30;
-const imageHeight = 200;
+const imageWidth = 200;
+const imageHeight = 300;
 const maxSamples = 40;
 
 let classifier;
@@ -49,21 +49,19 @@ function addButtons() {
 
   select("#class1").mousePressed(function(e) {
     const img = getImageData();
-    console.log(img);
-
-    classifier.addSample(img.imageData, 1);
-    addSampleImage(img.elt, 1);
+    classifier.addSample(img.imageData, "A");
+    addSampleImage(img.elt, "A");
   });
 
   select("#class2").mousePressed(function(e) {
     const img = getImageData();
-    classifier.addSample(img.imageData, 2);
-    addSampleImage(img.elt, 2);
+    classifier.addSample(img.imageData, "B");
+    addSampleImage(img.elt, "B");
   });
 
   // Predict button
-  // buttonPredict = select("#buttonPredict");
-  // buttonPredict.mousePressed(updateClassifying);
+  buttonPredict = select("#buttonPredict");
+  buttonPredict.mousePressed(updateClassifying);
 
   // Clear all classes button
   buttonClearAll = select("#clearAll");
@@ -75,11 +73,11 @@ function onClassifierLoaded() {
 }
 
 function startDevice() {
-    if (window.DeviceMotionEvent == undefined) {
-        alert("no sensor");
-    } else {
-        window.addEventListener("devicemotion", accelerometerUpdate, true);
-    }
+  if (window.DeviceMotionEvent == undefined) {
+    alert("no sensor");
+  } else {
+    window.addEventListener("devicemotion", accelerometerUpdate, true);
+  }
 }
 
 function accelerometerUpdate(event) {
@@ -119,36 +117,39 @@ function getImageData() {
 function draw() {
   background(0);
 
-  const xDistance = (width - 20) / maxSamples;
+  const interval = height / maxSamples;
 
-  function drawSample(i, y, color) {
+  function drawSample(i, v, color) {
     fill(color);
     noStroke();
-    circle(i * xDistance, y, 2);
+    circle(v, i * interval, 2);
   }
   currentSamples.forEach((d, i, a) => {
+    const w = width / 3;
     // TODO this should be abstracted
-    drawSample(i + 1, d[0] + 20, "red");
-    drawSample(i + 1, d[1] + 30, "blue");
-    drawSample(i + 1, d[2] + 50, "green");
+    drawSample(i + 1, d[0] + w * 1 - w * 0.5, "red");
+    drawSample(i + 1, d[1] + w * 2 - w * 0.5, "blue");
+    drawSample(i + 1, d[2] + w * 3 - w * 0.5 - 30, "green");
   });
 }
 
 function addSampleImage(img, label) {
-  console.log(img, label);
-
   select(`#samples${label}`).elt.appendChild(img);
 }
 
 function updateClassifying() {
-    classifying = !classifying;
-    buttonPredict.html(classifying ? "start predicting" : "stop predicting");
+  classifying = !classifying;
+  buttonPredict.html(classifying ? "start predicting" : "stop predicting");
+  console.log(classifier.knnClassifier.getClassifierDataset());
+  const img = getImageData();
+  select("#content-2").elt.appendChild(img.elt);
 
-    classifier.classify(gotResults);
+  classifier.classify(img.imageData, gotResults);
 }
 
-function gotResults(results) {
-    classifier.classify(gotResults);
+function gotResults(err, results) {
+  console.log(results);
+  classifier.classify(getImageData().imageData, gotResults);
 }
 // Update the example count for each class
 function updateCounts() {}
