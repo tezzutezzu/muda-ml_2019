@@ -2,9 +2,9 @@
   Movements trainer
 */
 
-const imageWidth = window.innerWidth;
-const imageHeight = 300;
-const maxSamples = 60;
+const imageWidth = window.innerWidth - 30;
+const imageHeight = 200;
+const maxSamples = 40;
 
 let classifier;
 let ready;
@@ -14,45 +14,64 @@ let currentSamples = [];
 let mainCanvas;
 
 function setup() {
-    mainCanvas = createCanvas(imageWidth, imageHeight);
-    mainCanvas.id("drawingCanvas");
-    mainCanvas.parent("#canvasContainer");
-    startDevice();
-    addButtons();
-    // classifier = new MovementClassifier({
-    //   width: 640,
-    //   height: 480,
-    //   onLoaded: onClassifierLoaded
-    // });
+  mainCanvas = createCanvas(imageWidth, imageHeight);
+  mainCanvas.id("drawingCanvas");
+  mainCanvas.parent("#canvasContainer");
+  startDevice();
+  addButtons();
+  classifier = new MovementClassifier({
+    width: 640,
+    height: 480,
+    onLoaded: onClassifierLoaded
+  });
 }
 
 function addButtons() {
-    const tab1 = select("#tab1");
-    const content1 = select("#content-1");
+  const tab1 = select("#tab1");
+  const content1 = select("#content-1");
 
-    const tab2 = select("#tab2");
-    const content2 = select("#content-2");
+  const tab2 = select("#tab2");
+  const content2 = select("#content-2");
 
-    tab1.mousePressed(function(e) {
-        content1.style("display", "block");
-        content2.style("display", "none");
-        tab2.removeClass("active");
-        tab1.removeClass("active");
-        tab1.addClass("active");
-    });
+  tab1.mousePressed(function(e) {
+    content1.style("display", "block");
+    content2.style("display", "none");
+    tab1.addClass("active");
+    tab2.removeClass("active");
+  });
 
-    tab2.mousePressed(function(e) {
-        content2.style("display", "block");
-        content1.style("display", "none");
-        tab2.removeClass("active");
-        tab1.removeClass("active");
-        tab2.addClass("active");
-    });
+  tab2.mousePressed(function(e) {
+    content2.style("display", "block");
+    content1.style("display", "none");
+    tab2.addClass("active");
+    tab1.removeClass("active");
+  });
+
+  select("#class1").mousePressed(function(e) {
+    const img = getImageData();
+    console.log(img);
+
+    classifier.addSample(img.imageData, 1);
+    addSampleImage(img.elt, 1);
+  });
+
+  select("#class2").mousePressed(function(e) {
+    const img = getImageData();
+    classifier.addSample(img.imageData, 2);
+    addSampleImage(img.elt, 2);
+  });
+
+  // Predict button
+  // buttonPredict = select("#buttonPredict");
+  // buttonPredict.mousePressed(updateClassifying);
+
+  // Clear all classes button
+  buttonClearAll = select("#clearAll");
+  // buttonClearAll.mousePressed(clearAllLabels);
 }
 
 function onClassifierLoaded() {
-    createButtons();
-    ready = true;
+  ready = true;
 }
 
 function startDevice() {
@@ -64,58 +83,61 @@ function startDevice() {
 }
 
 function accelerometerUpdate(event) {
-    var aX = event.accelerationIncludingGravity.x;
-    var aY = event.accelerationIncludingGravity.y;
-    var aZ = event.accelerationIncludingGravity.z;
-    // ix aY is negative, switch rotation
-    if (aY < 0) {
-        aX = -aX - 180;
-    }
+  var aX = event.accelerationIncludingGravity.x;
+  var aY = event.accelerationIncludingGravity.y;
+  var aZ = event.accelerationIncludingGravity.z;
+  // ix aY is negative, switch rotation
+  if (aY < 0) {
+    aX = -aX - 180;
+  }
 
-    if (currentSamples.length > maxSamples) {
-        // remove first element
-        currentSamples.shift();
-    }
-    currentSamples.push([aX, aY, aZ]);
-    console.log("ok");
+  if (currentSamples.length > maxSamples) {
+    // remove first element
+    currentSamples.shift();
+  }
+  currentSamples.push([aX, aY, aZ]);
+}
+
+function getImageData() {
+  const scale = 0.1;
+  var canvas = document.createElement("canvas");
+  canvas.height = height * scale;
+  canvas.width = width * scale;
+  var ctx = canvas.getContext("2d");
+
+  ctx.drawImage(mainCanvas.elt, 0, 0, width * scale, height * scale);
+
+  var img = new Image();
+  img.src = canvas.toDataURL();
+
+  return {
+    elt: img,
+    imageData: ctx.getImageData(0, 0, width * scale, height * scale)
+  };
 }
 
 function draw() {
-    background(220);
+  background(0);
 
-    const xDistance = (width - 20) / maxSamples;
+  const xDistance = (width - 20) / maxSamples;
 
-    function drawSample(i, y, py, color) {
-        fill(color);
-        noStroke();
-        circle(i * xDistance, y, 10);
-        if (py) {
-            stroke(color);
-            line(i * xDistance, y, (i - 1) * xDistance, py);
-        }
-    }
-    currentSamples.forEach((d, i, a) => {
-        drawSample(i + 1, d[0] + 20, a[i - 1], "red");
-        drawSample(i + 1, d[1] + 100, a[i - 1], "blue");
-        drawSample(i + 1, d[2] + 200, a[i - 1], "green");
-    });
+  function drawSample(i, y, color) {
+    fill(color);
+    noStroke();
+    circle(i * xDistance, y, 2);
+  }
+  currentSamples.forEach((d, i, a) => {
+    // TODO this should be abstracted
+    drawSample(i + 1, d[0] + 20, "red");
+    drawSample(i + 1, d[1] + 30, "blue");
+    drawSample(i + 1, d[2] + 50, "green");
+  });
 }
 
 function addSampleImage(img, label) {
-    select(`#samples${label}`).elt.appendChild(img);
-}
+  console.log(img, label);
 
-// A util function to create UI buttons
-function createButtons() {
-    // Predict button
-    buttonPredict = select("#buttonPredict");
-    buttonPredict.mousePressed(updateClassifying);
-
-    select("#save").mousePressed(() => classifier.saveModel());
-
-    // Clear all classes button
-    buttonClearAll = select("#clearAll");
-    // buttonClearAll.mousePressed(clearAllLabels);
+  select(`#samples${label}`).elt.appendChild(img);
 }
 
 function updateClassifying() {
