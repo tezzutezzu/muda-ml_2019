@@ -2,7 +2,7 @@
   Movements trainer
 */
 
-const imageWidth = 800;
+const imageWidth = window.innerWidth - 150;
 const imageHeight = 200;
 const maxSamples = 60;
 
@@ -79,7 +79,7 @@ function accelerometerUpdate(event) {
 }
 
 function draw() {
-  background(255);
+  background(0);
 
   const xDistance = (width - 20) / maxSamples;
 
