@@ -16,14 +16,16 @@ class MovementDrawer {
     this.canvas = canvas;
     this.withSkeleton = withSkeleton;
     this.currentSamples = [];
+
+
   }
 
   bodyParts = {
-    nose: { color: color(230, 230, 230) },
-    leftEye: { color: color(230, 230, 230) },
-    rightEye: { color: color(230, 230, 230) },
-    leftEar: { color: color(230, 230, 230) },
-    rightEar: { color: color(230, 230, 230) },
+    nose: { color: color(255, 0, 0) },
+    leftEye: { color: color(255, 0, 0) },
+    rightEye: { color: color(255, 0, 0) },
+    leftEar: { color: color(255, 0, 0) },
+    rightEar: { color: color(255, 0, 0) },
     leftShoulder: { color: color(0, 0, 255) },
     rightShoulder: { color: color(240, 250, 0) },
     leftElbow: { color: color(0, 160, 255) },
@@ -76,8 +78,9 @@ class MovementDrawer {
     canvas.height = height * scale;
     canvas.width = width * scale;
     var ctx = canvas.getContext("2d");
+    console.log(this.canvas.elt)
     ctx.drawImage(this.canvas.elt, 0, 0, width * scale, height * scale);
-
+    
     var img = new Image();
     img.src = canvas.toDataURL();
 
