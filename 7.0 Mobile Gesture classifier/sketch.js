@@ -2,8 +2,8 @@
   Movements trainer
 */
 
-const imageWidth = window.innerWidth - 150;
-const imageHeight = 200;
+const imageWidth = window.innerWidth;
+const imageHeight = 300;
 const maxSamples = 60;
 
 let classifier;
@@ -81,7 +81,7 @@ function accelerometerUpdate(event) {
 }
 
 function draw() {
-    background(200);
+    background(220);
 
     const xDistance = (width - 20) / maxSamples;
 
