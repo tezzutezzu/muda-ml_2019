@@ -20,10 +20,13 @@
         font-family: Helvetica;
         font-size: 12px;
         color: rgb(0, 0, 255);
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
     #canvasContainer {
         position: relative;
+        margin-top: 0px;
     }
 
     #tab {
@@ -39,13 +42,14 @@
         display: flex;
     }
 
-      #tab li {
+    #tab li {
         display: flex;
         width: 50%;
         padding: 0;
         margin: 0;
         padding: 10px;
         height: 50px;
+
     }
 
     #tab li.active {
@@ -55,6 +59,7 @@
 
     #content-1 {
         top: 50px;
+        left: 0%;
         width: 100%;
         height: 100%;
         position: fixed;
@@ -62,6 +67,7 @@
 
     #content-2 {
         top: 50px;
+        left: 0%;
         width: 100%;
         height: 100%;
         display: none;
@@ -70,24 +76,82 @@
 
     #class1 {
         position: fixed;
-        right: 10px;
-        top: 70px;
-        padding: 40px;
+        right: 2%;
+        width: 46%;
+                height: 150px;
+        top: 55px;
+        padding: 15px;
         border: 1px solid rgb(0, 0, 255);
         color: rgb(0, 0, 255);
+        background: white;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
     #class2 {
         position: fixed;
-        right: 10px;
-        top: 180px;
-        padding: 40px;
+        right: 2%;
+        width: 46%;
+        top: 210px;
+        height: 150px;
+        padding: 15px;
         border: 1px solid rgb(0, 0, 255);
         color: rgb(0, 0, 255);
+        background: white;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+
+
+    #samples2 {
+        position: fixed;
+        bottom: 5px;
+        height: 150px;
+        right: 2%;
+        width: 46%;
+        text-align: center;
+        padding: 25px;
+        border: 1px solid rgb(0, 255, 0);
+        color: rgb(0, 255, 0);
+        background: white;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    #samples1 {
+        position: fixed;
+        bottom: 160px;
+        height: 150px;
+        right: 2%;
+        width: 46%;
+        text-align: center;
+        padding: 25px;
+        border: 1px solid rgb(0, 255, 0);
+        color: rgb(0, 255, 0);
+        background: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        z-index: 3;
+    }
+
+
+
+    #buttonPredict {
+        position: fixed;
+        top: 55px;
+        width: 50%;
+        padding: 20px;
+        border: 1px solid rgb(0, 0, 255);
+        color: rgb(0, 0, 255);
+        background: white;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 
     h4 {
-        padding: 10px;
+        padding: 0px;
+        margin: 0;
     }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -96,27 +160,27 @@
 <body>
     <ul id="tab">
         <li class="active" id="tab1">
-            Tab 1
+            Classes
         </li>
         <li id="tab2">
-            Tab 2
+            Prediction
         </li>
     </ul>
     <div id="content-1" class="active">
         <div id="canvasContainer"></div>
         <p>
-            <button id="class1">Class 1</button><br />
-            <button id="class2">Class 2</button><br />
+            <button id="class1">Class one</button><br />
+            <button id="class2">Class two</button><br />
         </p>
         <div id="samplesA">
-            <h4>samples 1</h4>
+            <h4>samples A</h4>
         </div>
         <div id="samplesB">
-            <h4>samples 2</h4>
+            <h4>samples B</h4>
         </div>
     </div>
     <div id="content-2">
-        <button id="buttonPredict">Start predicting!</button><br />
+        <button id="buttonPredict">Start predicting</button><br />
     </div>
     <script src="sketch.js"></script>
 </body>
