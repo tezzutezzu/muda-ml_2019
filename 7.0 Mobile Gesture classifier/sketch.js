@@ -2,8 +2,8 @@
   Movements trainer
 */
 
-const imageWidth = window.innerWidth - 30;
-const imageHeight = 200;
+const imageWidth = window.innerWidth / 2;
+const imageHeight = window.innerHeight;
 const maxSamples = 40;
 
 let classifier;
@@ -14,64 +14,66 @@ let currentSamples = [];
 let mainCanvas;
 
 function setup() {
-  mainCanvas = createCanvas(imageWidth, imageHeight);
-  mainCanvas.id("drawingCanvas");
-  mainCanvas.parent("#canvasContainer");
-  startDevice();
-  addButtons();
-  classifier = new MovementClassifier({
-    width: 640,
-    height: 480,
-    onLoaded: onClassifierLoaded
-  });
+    mainCanvas = createCanvas(imageWidth, imageHeight);
+    mainCanvas.id("drawingCanvas");
+    mainCanvas.parent("#canvasContainer");
+    startDevice();
+    addButtons();
+    classifier = new MovementClassifier({
+        width: 640,
+        height: 480,
+        onLoaded: onClassifierLoaded
+    });
 }
 
 function addButtons() {
-  const tab1 = select("#tab1");
-  const content1 = select("#content-1");
+    const tab1 = select("#tab1");
+    const content1 = select("#content-1");
 
-  const tab2 = select("#tab2");
-  const content2 = select("#content-2");
+    const tab2 = select("#tab2");
+    const content2 = select("#content-2");
 
-  tab1.mousePressed(function(e) {
-    content1.style("display", "block");
-    content2.style("display", "none");
-    tab1.addClass("active");
-    tab2.removeClass("active");
-  });
+    tab1.mousePressed(function(e) {
+        content1.style("display", "block");
+        content2.style("display", "none");
+        tab1.removeClass("active");
+        tab2.removeClass("active");
+        tab1.addClass("active");
+    });
 
-  tab2.mousePressed(function(e) {
-    content2.style("display", "block");
-    content1.style("display", "none");
-    tab2.addClass("active");
-    tab1.removeClass("active");
-  });
+    tab2.mousePressed(function(e) {
+        content2.style("display", "block");
+        content1.style("display", "none");
+        tab2.removeClass("active");
+        tab1.removeClass("active");
+        tab2.addClass("active");
+    });
 
-  select("#class1").mousePressed(function(e) {
-    const img = getImageData();
-    console.log(img);
+    select("#class1").mousePressed(function(e) {
+        const img = getImageData();
+        console.log(img);
 
-    classifier.addSample(img.imageData, 1);
-    addSampleImage(img.elt, 1);
-  });
+        classifier.addSample(img.imageData, 1);
+        addSampleImage(img.elt, 1);
+    });
 
-  select("#class2").mousePressed(function(e) {
-    const img = getImageData();
-    classifier.addSample(img.imageData, 2);
-    addSampleImage(img.elt, 2);
-  });
+    select("#class2").mousePressed(function(e) {
+        const img = getImageData();
+        classifier.addSample(img.imageData, 2);
+        addSampleImage(img.elt, 2);
+    });
 
-  // Predict button
-  // buttonPredict = select("#buttonPredict");
-  // buttonPredict.mousePressed(updateClassifying);
+    // Predict button
+    // buttonPredict = select("#buttonPredict");
+    // buttonPredict.mousePressed(updateClassifying);
 
-  // Clear all classes button
-  buttonClearAll = select("#clearAll");
-  // buttonClearAll.mousePressed(clearAllLabels);
+    // Clear all classes button
+    buttonClearAll = select("#clearAll");
+    // buttonClearAll.mousePressed(clearAllLabels);
 }
 
 function onClassifierLoaded() {
-  ready = true;
+    ready = true;
 }
 
 function startDevice() {
@@ -83,61 +85,61 @@ function startDevice() {
 }
 
 function accelerometerUpdate(event) {
-  var aX = event.accelerationIncludingGravity.x;
-  var aY = event.accelerationIncludingGravity.y;
-  var aZ = event.accelerationIncludingGravity.z;
-  // ix aY is negative, switch rotation
-  if (aY < 0) {
-    aX = -aX - 180;
-  }
+    var aX = event.accelerationIncludingGravity.x;
+    var aY = event.accelerationIncludingGravity.y;
+    var aZ = event.accelerationIncludingGravity.z;
+    // ix aY is negative, switch rotation
+    if (aY < 0) {
+        aX = -aX - 180;
+    }
 
-  if (currentSamples.length > maxSamples) {
-    // remove first element
-    currentSamples.shift();
-  }
-  currentSamples.push([aX, aY, aZ]);
+    if (currentSamples.length > maxSamples) {
+        // remove first element
+        currentSamples.shift();
+    }
+    currentSamples.push([aX, aY, aZ]);
 }
 
 function getImageData() {
-  const scale = 0.1;
-  var canvas = document.createElement("canvas");
-  canvas.height = height * scale;
-  canvas.width = width * scale;
-  var ctx = canvas.getContext("2d");
+    const scale = 0.1;
+    var canvas = document.createElement("canvas");
+    canvas.height = height * scale;
+    canvas.width = width * scale;
+    var ctx = canvas.getContext("2d");
 
-  ctx.drawImage(mainCanvas.elt, 0, 0, width * scale, height * scale);
+    ctx.drawImage(mainCanvas.elt, 0, 0, width * scale, height * scale);
 
-  var img = new Image();
-  img.src = canvas.toDataURL();
+    var img = new Image();
+    img.src = canvas.toDataURL();
 
-  return {
-    elt: img,
-    imageData: ctx.getImageData(0, 0, width * scale, height * scale)
-  };
+    return {
+        elt: img,
+        imageData: ctx.getImageData(0, 0, width * scale, height * scale)
+    };
 }
 
 function draw() {
-  background(0);
+    background(250);
 
-  const xDistance = (width - 20) / maxSamples;
+    const xDistance = (width - 20) / maxSamples;
 
-  function drawSample(i, y, color) {
-    fill(color);
-    noStroke();
-    circle(i * xDistance, y, 2);
-  }
-  currentSamples.forEach((d, i, a) => {
-    // TODO this should be abstracted
-    drawSample(i + 1, d[0] + 20, "red");
-    drawSample(i + 1, d[1] + 30, "blue");
-    drawSample(i + 1, d[2] + 50, "green");
-  });
+    function drawSample(i, y, color) {
+        fill(color);
+        noStroke();
+        circle(i * xDistance, y, 2);
+    }
+    currentSamples.forEach((d, i, a) => {
+        // TODO this should be abstracted
+        drawSample(i + 1, d[0] + 20, "red");
+        drawSample(i + 1, d[1] + 30, "blue");
+        drawSample(i + 1, d[2] + 50, "green");
+    });
 }
 
 function addSampleImage(img, label) {
-  console.log(img, label);
+    console.log(img, label);
 
-  select(`#samples${label}`).elt.appendChild(img);
+    select(`#samples${label}`).elt.appendChild(img);
 }
 
 function updateClassifying() {
