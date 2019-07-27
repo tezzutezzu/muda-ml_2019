@@ -3,11 +3,6 @@
  *
  * contains all drawing function for drawing the motion point to the image
  *
- * usage:
- *
- *   imageCanvas = createGraphics(imageWidth, imageHeigt);
- *   MovementDrawer = new MovementDrawer(imageCanvas);
- *   MovementDrawer.draw(poses);
  *
  */
 
@@ -16,8 +11,6 @@ class MovementDrawer {
     this.canvas = canvas;
     this.withSkeleton = withSkeleton;
     this.currentSamples = [];
-
-
   }
 
   bodyParts = {
