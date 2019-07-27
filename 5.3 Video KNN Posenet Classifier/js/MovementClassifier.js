@@ -21,7 +21,7 @@ class MovementClassifier {
   load = () => {};
 
   saveModel = () => {
-    this.classifier.save("model.json");
+    this.knnClassifier.save("model.json");
   };
 
   onFeaturesReady = () => {
