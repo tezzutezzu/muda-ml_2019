@@ -1,8 +1,129 @@
-html, body {
+html, body, input, button {
+    font-family: 'Roboto Mono', monospace;
+  }
+  body {
     margin: 0;
     padding: 0;
+    background-color: #eeeeee;
+    margin: 46px 0 0 70px;
   }
+
   canvas {
     display: block;
   }
+
+  button {
+    background: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+    outline: none;
+  }
+  #status {
+    position: absolute;
+    top:0;
+    left: 0;
+    font-size: 9px;
+  }
   
+  #searchResultsContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 100;
+    background-color: blanchedalmond;
+    padding: 20px;
+  }
+  
+  #searchResultsContainer h2 {
+    margin-top: 85px;
+  }
+
+  #searchResults {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #searchResults li {
+    display: inline;
+  }
+  #searchResults li img {
+      width: 200px;
+  }
+
+
+  #trainer #canvasContainer,
+  #trainer #sampleContainer  {
+    margin-left: 60px;
+  }
+  #trainer #buttonContainer {
+    position: absolute;
+    top: 20%;
+    right: 16%;
+  }
+
+  #trainer #buttonContainer button {
+    /* min-width: 300px; */
+    height: 60px;
+    margin: 30px;
+    font-size: 44px;
+    line-height: 50px;
+    background: white;
+    border: black solid 1px;
+    color: black;
+    text-align: left;
+    padding: 0 14px 0 14px;
+  }
+
+  #trainer .sample {
+    display: inline-block;
+    width: 30%;
+    vertical-align: top;
+    margin-top: 40px;
+  }
+  #trainer .sample h4 {
+    display: none;
+  }  
+
+  #trainer .sample div {
+    width: 400px;
+    margin-top: 10px;
+  }
+
+  #trainer .sample img {
+    margin: 8px;
+  }  
+
+  #trainer .sample input {
+    width: 20em;
+    height: 3em;
+    font-size: 1.2em;
+    line-height: 1.3em;
+
+  }
+
+  #trainer .sample input {
+    width: 340px;
+    height: 60px;
+    font-size: 40px;
+    line-height: 50px;
+    vertical-align: middle;
+    margin: 0;
+    padding: 14px;
+    outline: none;
+    border: black solid 1px;
+  }
+
+  #trainer .sample button {
+    width: 60px;
+    height: 60px;
+    font-size: 40px;
+    line-height: 50px;
+    vertical-align: middle;
+    border: black solid 1px;
+
+}
+

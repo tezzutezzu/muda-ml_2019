@@ -1,67 +1,80 @@
 
 
-let video;
 let poseNet;
 let poses = [];
 let printPose = true;
 let running;
 
-let bodyParts;
-
-let canvasWitdth = 1280;
-let canvasHeight = 480;
-let imageWidth = 640;
-let imageHeight = 480;
+let canvasWitdth;
+let canvasHeight;
+let imageWidth;
+let imageHeight;
 
 let monitorGraphics;
 let imageCanvas;
 
 let savedImages = [];
 
-let m2i;
-let tracker;
+let motionDrawer;
+let classifier;
+
+let searchMap = {
+  "crawl swimming":"crawl swimmer pool blue",
+  "cycling":"bicicle cycling ",
+  "running":"marthon running",
+}
 
 
 function setup() {
+
+  canvasWitdth = displayWidth;
+  canvasHeight = displayHeight;
+  imageWidth = 640;
+  imageHeight = 480;
+  
   createCanvas(canvasWitdth, canvasHeight);
   monitorGraphics = createGraphics(imageWidth, imageHeight);
   imageCanvas = createGraphics(imageWidth, imageHeight);
 
-  tracker =  new SkeletonTracker({
-    onModelLoaded: modelReady
+  classifier = new MovementClassifier({
+    width: imageWidth,
+    height: imageHeight
   });
 
-  m2i = new M2I(imageCanvas);
-}
+  motionDrawer = new MovementDrawer(imageCanvas);
 
-function modelReady() {
-  select("#status").html("Model Loaded");
+  select("#keyword").changed(doSearch);
 }
 
 function draw() {
-  monitorGraphics.image(video, 0, 0);
+  monitorGraphics.image(classifier.video, 0, 0);
 
-  m2i.draw(poses);
+  // let imageData = motionDrawer.getImageData();
+  // let img = dokument.getElementById();
+  // img.src = imageData.img.src;
 
   
   drawKeypoints();
   drawSkeleton();
-  image(monitorGraphics, canvasWitdth / 2, 0);
-  image(imageCanvas, 0, 0);
+  image(monitorGraphics, 0, 0);
+  image(imageCanvas, 0, imageHeight, 200, 200);
 }
 
-function keyPressed() {
-  console.log(keyCode);
-  if (keyCode === 32) {
-    // space
-    keepImage();
-  } else if (keyCode === 83) {
-    // s
-    saveAllImages();
-  } else if (keyCode === 67) {
-    // c
-    m2i.clearCanvas();
-  }
+function doSearch(event) {
+  console.log(this.value());
+
+  let searchWord = searchMap[this.value()];
+  if( searchWord === undefined) searchWord = this.value();
+
+  let url = "https://api.qwant.com/api/search/images?count=20&t=images&safesearch=1&locale=en_US&uiv=4&imagetype=photo&q=";
+
+  loadJSON(url + encodeURIComponent(searchWord), updateSearchImages);
+
+  console.log(searchWord);
+}
+
+function updateSearchImages(result) {
+  console.log(results);
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -113,7 +126,7 @@ function keepImage() {
   let img = createImage(imageWidth, imageHeight);
 
   img.copy(
-    m2i.canvas,
+    motionDrawer.canvas,
     0,
     0,
     imageWidth,
@@ -128,7 +141,7 @@ function keepImage() {
   if (savedImages.length > 20) {
     savedImages.shift();
   }
-  m2i.clearCanvas();
+  motionDrawer.clearCanvas();
 }
 
 function saveAllImages() {

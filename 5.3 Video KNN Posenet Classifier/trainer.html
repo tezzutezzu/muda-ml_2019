@@ -4,6 +4,8 @@
     <title>
       KNN Classification on Webcam Images with mobileNet
     </title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="./js/MovementDrawer.js"></script>
     <script src="./js/MovementClassifier.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
@@ -16,24 +18,35 @@
     <style></style>
   </head>
 
-  <body>
+  <body id="trainer">
     <div id="canvasContainer"></div>
-    <br />
 
-    <p>
-      <button id="buttonPredict">Start predicting!</button><br />
-      <button id="clearAll">Clear all classes</button><br />
-      <button id="save">save model</button><br />
-    </p>
-    <div id="samples1">
-      <h4>samples 1</h4>
+    <div id="buttonContainer">
+      <button id="buttonPredict">Start Predicting</button><br />
+      <button id="clearAll">Clear</button><br />
+      <button id="save">Save</button><br />
     </div>
 
-    <div id="samples2">
-      <h4>samples 2</h4>
-    </div>
-    <div id="samples3">
-      <h4>samples 3</h4>
+    <div id="sampleContainer">
+      <div id="samples1" class="sample">
+        <h4>samples 1</h4>
+        <input id="label-1" value="swimming" type="text"><button id="add-label-1">+</button>
+        <div id="images-label-1">
+        </div>
+      </div>
+
+      <div id="samples2" class="sample">
+        <h4>samples 2</h4>
+        <input id="label-2" value="running" type="text"><button id="add-label-2">+</button>
+        <div id="images-label-2">
+        </div>
+      </div>
+      <div id="samples3" class="sample">
+        <h4>samples 3</h4>
+        <input id="label-3" value="cycling" type="text"><button id="add-label-3">+</button>
+        <div id="images-label-3">
+        </div>
+      </div>
     </div>
 
     <script src="js/trainer.js"></script>

@@ -29,6 +29,12 @@ function setup() {
   poseNet.on("pose", results => {
     poses = results;
   });
+
+  select("#add-label-1").mousePressed(buttonAddPressed);
+  select("#add-label-2").mousePressed(buttonAddPressed);
+  select("#add-label-3").mousePressed(buttonAddPressed);
+ 
+
 }
 
 function onModelReady() {
@@ -69,7 +75,7 @@ function draw() {
   if (poses && poses.length > 0) {
     drawer.update(poses);
 
-    if (keyIsPressed) {
+    if (keyIsPressed && (key == 1 || key == 2 || key == 3)) {
       const img = drawer.getImageData();
       classifier.addSample(img.imageData, key);
       addSampleImage(img.elt, key);
@@ -79,6 +85,16 @@ function draw() {
   image(drawer.canvas, 0, 0);
 }
 
+
+function buttonAddPressed(event) {
+  var labelId = this.elt.id.substr(this.elt.id.length-1, 1);
+  var label = select("#label-" + labelId).value();
+  console.log(label);
+
+  const img = drawer.getImageData();
+  classifier.addSample(img.imageData, label);
+  addSampleImage(img.elt, labelId);
+}
 function drawTrail(array) {}
 
 function reset() {
@@ -86,7 +102,7 @@ function reset() {
 }
 
 function addSampleImage(img, label) {
-  select(`#samples${label}`).elt.appendChild(img);
+  select(`#images-label-${label}`).elt.appendChild(img);
 }
 
 // A util function to create UI buttons
@@ -104,7 +120,7 @@ function createButtons() {
 
 function updateClassifying() {
   classifying = !classifying;
-  buttonPredict.html(classifying ? "start predicting" : "stop predicting");
+  buttonPredict.html(classifying ? "Start Predicting" : "Stop Predicting");
 
   classifier.classify(gotResults);
 }
